@@ -58,15 +58,13 @@ class PositionalEncoding(nn.Module):
 
 class LayerNormalization(nn.Module):
 
-    def __init__(self, eps: float = 1e-6):
+    def __init__(self, features: int, eps: float = 1e-6):
         super(LayerNormalization, self).__init__()
         self.eps = eps
-
         # nn.Parameter makes the multiplicative parameter trainable
-        self.alpha = nn.Parameter(torch.ones(1))
-
+        self.alpha = nn.Parameter(torch.ones(features))
         # nn.Parameter makes the additive parameter trainable
-        self.bias = nn.Parameter(torch.zeros(1))
+        self.bias = nn.Parameter(torch.zeros(features))
 
     def forward(self, x):
         mean = x.mean(dim=-1, keepdim=True)
@@ -78,11 +76,10 @@ class FeedForwardBlock(nn.Module):
 
     def __init__(self, d_model: int, d_ff: int, dropout: float = 0.1):
         super(FeedForwardBlock, self).__init__()
-        self.dropout = nn.Dropout(dropout)
-
         # First linear layer with W_1 and b_1 parameters
         self.fc1 = nn.Linear(d_model, d_ff)
-
+        # Dropout layer
+        self.dropout = nn.Dropout(dropout)
         # Second linear layer with W_2 and b_2 parameters
         self.fc2 = nn.Linear(d_ff, d_model)
 
