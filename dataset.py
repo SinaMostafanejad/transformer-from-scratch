@@ -39,7 +39,7 @@ class BilingualDataset(Dataset):
         dec_num_padding_tokens = self.seq_len - len(dec_input_tokens) - 1
 
         if enc_num_padding_tokens < 0 or dec_num_padding_tokens < 0:
-            raise ValueError("Sequence length is too short")
+            raise ValueError("Sequence is too long")
 
         # Add SOS and EOS tokens to the source text
         encoder_input = torch.cat(
@@ -100,5 +100,5 @@ class BilingualDataset(Dataset):
 
 
 def causal_mask(size):
-    mask = torch.triu(torch.ones(1, size, size), diagonal=1).type(torch.int)
+    mask = torch.triu(torch.ones((1, size, size)), diagonal=1).type(torch.int)
     return mask == 0
